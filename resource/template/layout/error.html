@@ -1,6 +1,9 @@
 {% extends "layout/base.html" %}
 {% block main %}
-<div class="container text-center py-5">
-    {% block content %}{% endblock %}
+<div id="app">
+    {% include "layout/partial/navbar.html" %}
+    <div class="container text-center py-5">
+        {% block content %}{% endblock %}
+    </div>
 </div>
 {% endblock %}
