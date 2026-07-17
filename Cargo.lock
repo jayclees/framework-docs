@@ -911,6 +911,7 @@ dependencies = [
  "http-body-util",
  "hyper",
  "hyper-util",
+ "minijinja",
  "minijinja-autoreload",
  "regex",
  "sea-orm",
