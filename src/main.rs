@@ -3,7 +3,7 @@ mod entity;
 mod routes;
 
 use crate::routes::register_routes;
-use framework::app::App;
+use framework::app::{App, Env};
 use framework::error::register_panic_hook;
 use framework::routing::router::Router;
 use framework::support::logger::Logger;
@@ -28,7 +28,8 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let template_reloader = reloader();
     let db = db().await?;
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
-    let app = App::new(router, addr, template_reloader, db, logger).await;
+    let env = Env::new("local".to_string(), true);
+    let app = App::new(router, addr, template_reloader, db, logger, env).await;
     let app = Arc::new(app);
 
     framework::app::run(app).await
@@ -72,6 +73,7 @@ fn reloader() -> AutoReloader {
         if !disable_autoreload {
             notifier.watch_path(&template_path, true);
         }
+
         Ok(env)
     })
 }

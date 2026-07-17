@@ -1,4 +1,3 @@
-use std::fs::read_to_string;
 use async_trait::async_trait;
 use framework::action::{text, Action, Responsable};
 use framework::app::App;
@@ -7,6 +6,7 @@ use framework::http::request::HttpRequest;
 use markdown::to_html;
 use minijinja::context;
 use serde::Serialize;
+use std::fs::read_to_string;
 
 #[derive(Debug, Serialize)]
 pub struct StandardPage {
@@ -36,12 +36,11 @@ impl Action for StandardPage {
         app: &App,
         _request: HttpRequest,
     ) -> Result<Box<dyn Responsable>, HttpError> {
-        let guard = app.template();
-        let result = guard.get_template(&self.template);
+        let result = app.template(&self.template, self);
 
         match result {
-            Ok(template) => text(template.render(self).unwrap()),
-            Err(_error) => Err(HttpError::new(500, "whoops".to_owned())),
+            Ok(template) => text(template),
+            Err(error) => Err(HttpError::new(500, error.to_string())),
         }
     }
 }
@@ -60,17 +59,11 @@ impl Action for DocsPage {
         let doc = request.var("slug").unwrap();
         let md = read_to_string(format!("resource/template/docs/md/{doc}.md")).unwrap();
         let html = to_html(md.as_str());
-
-        let guard = app.template();
-        let result = guard.get_template("docs/show.html");
+        let result = app.template("docs/show.html", context!(content => html));
 
         match result {
-            Ok(template) => text(
-                template
-                    .render(context!(content => html))
-                    .unwrap(),
-            ),
-            Err(_error) => Err(HttpError::new(500, "test".to_owned())),
+            Ok(rendered) => text(rendered),
+            Err(error) => Err(HttpError::new(500, error.to_string())),
         }
     }
 }
