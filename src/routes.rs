@@ -20,4 +20,13 @@ pub fn register_routes(router: &mut Router) -> () {
         ),
         |route| route.name("about"),
     );
+    router.getm(
+        "/docs",
+        StandardPage::new(
+            "Docs - Sturdy Framework",
+            "Learn about the features for Sturdy Framework.",
+            "docs/index.html",
+        ),
+        |route| route.name("docs.index"),
+    );
 }

@@ -6,6 +6,7 @@ use crate::routes::register_routes;
 use framework::app::App;
 use framework::error::register_panic_hook;
 use framework::routing::router::Router;
+use framework::support::logger::Logger;
 use minijinja::{path_loader, Environment};
 use minijinja_autoreload::AutoReloader;
 use sea_orm::{ConnectOptions, Database, DatabaseConnection};
@@ -19,14 +20,15 @@ use std::time::Duration;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let root = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
-    register_panic_hook(root.clone());
+    let logger = Logger::new(root.clone());
+    register_panic_hook(logger.clone());
     dotenvy::dotenv()?;
 
     let router = Router::new(register_routes);
     let template_reloader = reloader();
     let db = db().await?;
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
-    let app = App::new(router, addr, template_reloader, db).await;
+    let app = App::new(router, addr, template_reloader, db, logger).await;
     let app = Arc::new(app);
 
     framework::app::run(app).await
@@ -56,8 +58,7 @@ fn reloader() -> AutoReloader {
     // If FAST_AUTORELOAD is set, then fast reloading is enabled.
     let fast_autoreload = env::var("FAST_AUTORELOAD").as_deref() == Ok("1");
 
-    // The closure is invoked every time the environment is outdated to
-    // recreate it.
+    // The closure is invoked every time the environment is outdated to recreate it.
     AutoReloader::new(move |notifier| {
         let template_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("resource/template");
         let mut env = Environment::new();

@@ -1,0 +1,46 @@
+{% extends "layout/app.html" %}
+{% block head %}
+<title>{{ title }}</title>
+<meta name="description" content="{{ description }}">
+{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <a href="#" class="card mb-4 bg-dark-subtle text-decoration-none">
+                <div class="card-body py-5 text-center">
+                    <h4 class="my-3">Intro</h4>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="#" class="card mb-4 bg-dark-subtle text-decoration-none">
+                <div class="card-body py-5 text-center">
+                    <h4 class="my-3">Installation</h4>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="#" class="card mb-4 bg-dark-subtle text-decoration-none">
+                <div class="card-body py-5 text-center">
+                    <h4 class="my-3">Routing</h4>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="#" class="card mb-4 bg-dark-subtle text-decoration-none">
+                <div class="card-body py-5 text-center">
+                    <h4 class="my-3">Actions</h4>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="#" class="card mb-4 bg-dark-subtle text-decoration-none">
+                <div class="card-body py-5 text-center">
+                    <h4 class="my-3">Auto Reload</h4>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
