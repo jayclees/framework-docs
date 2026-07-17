@@ -1,0 +1,26 @@
+#wrapper {
+
+}
+
+#sidebar {
+    left: 0;
+    height: calc(100% - var(--navbar-height));
+
+    width: 350px;
+
+    transition: 200ms ease-in-out transform;
+    transform: translateX(-100%);
+
+    @media (min-width: 992px) {
+        transform: translateX(0);
+    }
+}
+
+#content {
+    transition: 200ms ease-in-out padding-left;
+
+    @media (min-width: 992px) {
+        transform: translateX(0);
+        padding-left: 350px;
+    }
+}
