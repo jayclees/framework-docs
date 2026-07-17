@@ -1,8 +1,11 @@
+use std::fs::read_to_string;
 use async_trait::async_trait;
 use framework::action::{text, Action, Responsable};
 use framework::app::App;
 use framework::http::error::HttpError;
 use framework::http::request::HttpRequest;
+use markdown::to_html;
+use minijinja::context;
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]
@@ -35,7 +38,6 @@ impl Action for StandardPage {
     ) -> Result<Box<dyn Responsable>, HttpError> {
         let guard = app.template();
         let result = guard.get_template(&self.template);
-        framework::log!("test");
 
         match result {
             Ok(template) => text(template.render(self).unwrap()),
@@ -45,15 +47,30 @@ impl Action for StandardPage {
 }
 
 #[derive(Debug)]
-pub struct _DocsPage(&'static str);
+pub struct DocsPage;
 
 #[async_trait]
-impl Action for _DocsPage {
+impl Action for DocsPage {
     async fn handle(
         &self,
-        _app: &App,
-        _request: HttpRequest,
+        app: &App,
+        request: HttpRequest,
     ) -> Result<Box<dyn Responsable>, HttpError> {
-        todo!()
+        // First load and parse md file
+        let doc = request.var("slug").unwrap();
+        let md = read_to_string(format!("resource/template/docs/md/{doc}.md")).unwrap();
+        let html = to_html(md.as_str());
+
+        let guard = app.template();
+        let result = guard.get_template("docs/show.html");
+
+        match result {
+            Ok(template) => text(
+                template
+                    .render(context!(content => html))
+                    .unwrap(),
+            ),
+            Err(_error) => Err(HttpError::new(500, "test".to_owned())),
+        }
     }
 }

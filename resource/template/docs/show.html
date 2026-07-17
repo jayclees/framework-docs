@@ -1,0 +1,10 @@
+{% extends "layout/app.html" %}
+{% block head %}
+<title>{{ title }}</title>
+<meta name="description" content="{{ description }}">
+{% endblock %}
+{% block content %}
+<div class="container py-5">
+    {{ content|safe }}
+</div>
+{% endblock %}

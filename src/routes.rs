@@ -1,4 +1,4 @@
-use crate::action::pages::StandardPage;
+use crate::action::pages::{DocsPage, StandardPage};
 use framework::routing::router::Router;
 
 pub fn register_routes(router: &mut Router) -> () {
@@ -27,6 +27,11 @@ pub fn register_routes(router: &mut Router) -> () {
             "Learn about the features for Sturdy Framework.",
             "docs/index.html",
         ),
+        |route| route.name("docs.index"),
+    );
+    router.getm(
+        "/docs/{slug}",
+        DocsPage,
         |route| route.name("docs.index"),
     );
 }
