@@ -2,36 +2,36 @@ use crate::action::pages::{DocsPage, StandardPage};
 use framework::routing::router::Router;
 
 pub fn register_routes(router: &mut Router) -> () {
-    router.getm(
+    router.getn(
         "/",
         StandardPage::new(
             "Sturdy Framework",
             "A New Framework Designed For The Modern Web",
             "landing.html",
         ),
-        |route| route.name("landing"),
+        "landing",
     );
-    router.getm(
+    router.getn(
         "/about",
         StandardPage::new(
             "About - Sturdy Framework",
             "A New Framework Designed For The Modern Web",
             "about.html",
         ),
-        |route| route.name("about"),
+        "about",
     );
-    router.getm(
+    router.getn(
         "/docs",
         StandardPage::new(
             "Docs - Sturdy Framework",
             "Learn about the features for Sturdy Framework.",
             "docs/index.html",
         ),
-        |route| route.name("docs.index"),
+        "docs.index",
     );
-    router.getm(
+    router.getn(
         "/docs/{slug}",
         DocsPage,
-        |route| route.name("docs.index"),
+        "docs.index",
     );
 }

@@ -4,21 +4,23 @@ mod routes;
 
 use crate::routes::register_routes;
 use framework::app::{App, Env};
+use framework::cli::{Registry, Value};
 use framework::error::register_panic_hook;
 use framework::routing::router::Router;
 use framework::support::logger::Logger;
 use minijinja::{path_loader, Environment};
 use minijinja_autoreload::AutoReloader;
-use sea_orm::{ConnectOptions, Database, DatabaseConnection};
+use sea_orm::{ConnectOptions, Database, DatabaseConnection, Iden};
 use std::env;
 use std::error::Error;
-use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::Duration;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
+    let (host, port) = process_args();
+
     let root = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
     let logger = Logger::new(root.clone());
     register_panic_hook(logger.clone());
@@ -27,8 +29,8 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let router = Router::new(register_routes);
     let template_reloader = reloader();
     let db = db().await?;
-    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
-    let env = Env::new("local".to_string(), true);
+    let env = Env::new("production".to_string(), true);
+    let addr = format!("{host}:{port}");
     let app = App::new(router, addr, template_reloader, db, logger, env).await;
     let app = Arc::new(app);
 
@@ -76,4 +78,26 @@ fn reloader() -> AutoReloader {
 
         Ok(env)
     })
+}
+
+fn process_args() -> (String, String) {
+    let registry = Registry::default();
+    let parsed = registry.parse(env::args().skip(1).collect());
+
+    match parsed {
+        Ok(parsed) => {
+            if parsed.help_requested() {
+                registry.print_help();
+                drop(parsed);
+                drop(registry);
+                std::process::exit(0);
+            }
+
+            (parsed.host(), parsed.port())
+        }
+        Err(error) => {
+            registry.eprint_help(error.msg().clone());
+            panic!("Failed...");
+        }
+    }
 }

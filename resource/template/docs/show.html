@@ -4,17 +4,21 @@
 <meta name="description" content="{{ description }}">
 {% endblock %}
 {% block content %}
-<div id="wrapper" class="position-relative">
-    <aside id="sidebar" class="sticky-top p-3">
-        <h4>Table of Contents:</h4>
-        <ul>
-            <li><a href="/docs/about">About</a></li>
-        </ul>
-    </aside>
-    <main id="content">
-        <div class="container py-5">
-            {{ content|safe }}
-        </div>
-    </main>
+<div class="container">
+    <div class="row">
+        <aside class="col-lg-3">
+            <div class="sticky-top top-0 p-3">
+                <h4>Table of Contents:</h4>
+                <ul>
+                    <li><a href="/docs/about">About</a></li>
+                </ul>
+            </div>
+        </aside>
+        <main class="col-lg-9">
+            <div class="container py-lg-5">
+                {{ content|safe }}
+            </div>
+        </main>
+    </div>
 </div>
 {% endblock %}

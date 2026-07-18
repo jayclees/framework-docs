@@ -57,13 +57,19 @@ impl Action for DocsPage {
     ) -> Result<Box<dyn Responsable>, HttpError> {
         // First load and parse md file
         let doc = request.var("slug").unwrap();
-        let md = read_to_string(format!("resource/template/docs/md/{doc}.md")).unwrap();
-        let html = to_html(md.as_str());
-        let result = app.template("docs/show.html", context!(content => html));
+        let md = read_to_string(format!("resource/template/docs/md/{doc}.md"));
 
-        match result {
-            Ok(rendered) => text(rendered),
-            Err(error) => Err(HttpError::new(500, error.to_string())),
+        match md {
+            Ok(md) => {
+                let html = to_html(md.as_str());
+                let result = app.template("docs/show.html", context!(content => html));
+
+                match result {
+                    Ok(rendered) => text(rendered),
+                    Err(error) => Err(HttpError::new(500, error.to_string())),
+                }
+            }
+            Err(error) => Err(HttpError::new(404, error.to_string())),
         }
     }
 }
