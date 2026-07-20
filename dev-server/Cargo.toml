@@ -12,3 +12,4 @@ watchexec-signals = "5.0.1"
 watchexec-supervisor = "5.2.0"
 framework = { path = "../framework" }
 notify-types = "2.1.0"
+notify = "8.2.0"

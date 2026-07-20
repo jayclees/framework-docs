@@ -1,45 +1,89 @@
+use notify::{recommended_watcher, Error, Event, RecursiveMode, Watcher};
+use notify_types::event::EventKind;
 use std::env;
-use std::fmt::Error;
 use std::net::ToSocketAddrs;
-// use std::net::ToSocketAddrs;
-use std::path::PathBuf;
-use std::process::{ExitCode, Stdio};
-use tokio::process::Command;
-use framework::dd;
-// use std::time::Duration;
-// use watchexec::Watchexec;
-// use watchexec::action::ActionHandler;
-// use watchexec_events::Tag;
-// use watchexec_signals::Signal;
-// use watchexec_supervisor::command::{Program};
-// use watchexec_supervisor::job::start_job;
+use std::path::{Path, PathBuf};
+use std::process::Stdio;
+use std::sync::mpsc;
+use tokio::process::{Child, Command};
+use tokio::task::JoinHandle;
+
+// struct DropGuard(Child);
+//
+// impl Drop for DropGuard {
+//     async fn drop(&mut self) {
+//         let mut child = &mut self.0;
+//         match child.kill().await {
+//             Ok(_) => {}
+//             Err(_) => {}
+//         };
+//     }
+// }
 
 #[tokio::main]
 async fn main() {
-    let mut addrs_iter = "node:80".to_socket_addrs().unwrap();
-    let vite_ip = addrs_iter.next().unwrap().ip();
+    let mut addrs_iter = "node:5173".to_socket_addrs().unwrap();
+    let vite_url = addrs_iter.next().unwrap().to_string();
     let dev_server_root = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
     let app_root = dev_server_root.join("..").canonicalize().unwrap();
     let app_src = dev_server_root.join("../src").canonicalize().unwrap();
+    let mut join_handle = cargo_run(vite_url.clone(), app_root.clone());
+    let mut child = join_handle.await.unwrap();
 
-    let app_root_clone = app_root.clone();
-    let join_handle = tokio::spawn(async move {
-        // call cargo run in root dir
-        Command::new("cargo")
-            .arg("run")
-            .arg("--")
-            .arg("--host=0.0.0.0")
-            .arg(format!("--vite-url={}:5173", vite_ip))
-            .current_dir(app_root_clone)
-            .stdout(Stdio::piped())
-            .spawn()
-            .expect("command failed to start")
-            .wait()
-            .await
-            .unwrap()
-    });
+    // let mut started =
+    let (tx, rx) = mpsc::channel::<Result<Event, Error>>();
+    let mut watcher = recommended_watcher(tx).unwrap();
 
-    let t = join_handle.await.unwrap();
+    // start process
+    // start loop & wait for fs event
+    // when event received and is updating an rs file
+    // kill original process and start a new one
+
+    watcher
+        .watch(Path::new("../src"), RecursiveMode::Recursive)
+        .unwrap();
+    // loop {
+    //     let event = listen_for_rs_update().await;
+    //     join_handle.await.unwrap().kill().await.unwrap();
+    //     join_handle = cargo_run(vite_url.clone(), app_root.clone());
+    // }
+    for res in rx {
+        match res {
+            Ok(event) => match event.kind {
+                EventKind::Create(_) | EventKind::Modify(_) | EventKind::Remove(_) => {
+                    dbg!("Modify event received");
+                    Command::new("kill")
+                        .args(["-s", "TERM", &child.id().unwrap().to_string()])
+                        .spawn()
+                        .unwrap()
+                        .wait()
+                        .await
+                        .unwrap();
+                    dbg!("kill command sent");
+                    let t = child.wait().await.unwrap();
+                    dbg!("Child exit status:");
+                    dbg!(t);
+                    dbg!("End child exit status:");
+                    join_handle = cargo_run(vite_url.clone(), app_root.clone());
+                    child = join_handle.await.unwrap();
+
+                    let path_or_error = match PathBuf::from(&event.paths[0]).canonicalize() {
+                        Ok(pathbuf) => pathbuf,
+                        Err(err) => event.paths[0].clone()
+                    };
+                    dbg!(path_or_error);
+                }
+                _ => {
+                    dbg!("Other event");
+                }
+            },
+            Err(e) => println!("watch error: {:?}", e),
+        }
+    }
+
+    // let t2 = t.kill().await;
+
+    // let t = join_handle.await.unwrap();
 
     // println!("Pretend started cargo run in project root...");
     //
@@ -111,7 +155,20 @@ async fn main() {
     // wx.config.pathset([app_src]);
     //
     // wx.main().await.unwrap().unwrap();
-    //
-    // println!("loop ended...");
-    // println!("exiting...");
+    // println!("closing...");
+    // join_handle.await.unwrap().kill().await.unwrap();
+}
+
+fn cargo_run(vite_url: String, working_dir: PathBuf) -> JoinHandle<Child> {
+    tokio::spawn(async move {
+        Command::new("cargo")
+            .arg("run")
+            .arg("--")
+            .arg("--host=0.0.0.0")
+            .arg(format!("--vite-url={vite_url}"))
+            .current_dir(working_dir)
+            .stdout(Stdio::piped())
+            .spawn()
+            .expect("command failed to start")
+    })
 }
