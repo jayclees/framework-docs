@@ -5,10 +5,9 @@ use framework::http::error::HttpError;
 use framework::http::request::HttpRequest;
 use markdown::to_html;
 use minijinja::context;
-use serde::Serialize;
 use std::fs::read_to_string;
 
-#[derive(Debug, Serialize)]
+#[derive(Debug)]
 pub struct StandardPage {
     title: &'static str,
     description: &'static str,
@@ -36,7 +35,14 @@ impl Action for StandardPage {
         app: &App,
         _request: HttpRequest,
     ) -> Result<Box<dyn Responsable>, HttpError> {
-        let result = app.template(&self.template, self);
+        let result = app.template(
+            &self.template,
+            context! {
+                title => self.title,
+                description => self.description,
+                template => self.template,
+            },
+        );
 
         match result {
             Ok(template) => text(template),

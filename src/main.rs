@@ -19,8 +19,7 @@ use std::time::Duration;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
-    let (host, port) = process_args();
-
+    let (host, port, vite_url) = process_args();
     let root = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
     let logger = Logger::new(root.clone());
     register_panic_hook(logger.clone());
@@ -29,8 +28,9 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let router = Router::new(register_routes);
     let template_reloader = reloader();
     let db = db().await?;
-    let env = Env::new("production".to_string(), true);
+    let env = Env::new("production".to_string(), true, Some(vite_url));
     let addr = format!("{host}:{port}");
+    dbg!(&addr);
     let app = App::new(router, addr, template_reloader, db, logger, env).await;
     let app = Arc::new(app);
 
@@ -80,7 +80,7 @@ fn reloader() -> AutoReloader {
     })
 }
 
-fn process_args() -> (String, String) {
+fn process_args() -> (String, String, String) {
     let registry = Registry::default();
     let parsed = registry.parse(env::args().skip(1).collect());
 
@@ -93,7 +93,7 @@ fn process_args() -> (String, String) {
                 std::process::exit(0);
             }
 
-            (parsed.host(), parsed.port())
+            (parsed.host(), parsed.port(), parsed.vite_url())
         }
         Err(error) => {
             registry.eprint_help(error.msg().clone());

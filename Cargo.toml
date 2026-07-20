@@ -22,4 +22,4 @@ markdown = "1.0.0"
 
 [workspace]
 resolver = "3"
-members = [".", "framework", "migration"]
+members = [".", "dev-server", "framework", "migration"]

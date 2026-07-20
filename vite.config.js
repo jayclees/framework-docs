@@ -1,44 +1,47 @@
 import { defineConfig } from 'vite'
+import dns from 'node:dns/promises'
 
-export default defineConfig({
-    logLevel: 'info',
-    server: {
-        cors: {
-            // the origin you will be accessing via browser
-            origin: 'http://172.19.0.2',
+export default defineConfig(async ({ command, mode, isSsrBuild, isPreview }) => {
+    let nginxAddr = await dns.lookup('nginx').then((result) => result.address)
+    return {
+        logLevel: 'info',
+        server: {
+            cors: {
+                // This needs to be equal to the url (origin) you see in the address bar
+                origin: `http://${nginxAddr}`,
+            },
+            origin: `http://${nginxAddr}`,
         },
-        origin: 'http://172.19.0.2',
-    },
-    build: {
-        // generate .vite/manifest.json in outDir
-        manifest: true,
-        rolldownOptions: {
-            input: './resource/js/main.js',
-        },
-        outDir: './public/dist',
-        modulePreload: {
-            polyfill: true,
-        },
-    },
-    publicDir: false,
-    css: {
-        preprocessorOptions: {
-            scss: {
-                silenceDeprecations: [
-                    'import',
-                    'mixed-decls',
-                    'color-functions',
-                    'global-builtin',
-                    'if-function',
-                ],
+        build: {
+            // generate .vite/manifest.json in outDir
+            manifest: true,
+            rolldownOptions: {
+                input: './resource/js/main.js',
+            },
+            outDir: './public/dist',
+            modulePreload: {
+                polyfill: true,
             },
         },
-    },
-    plugins: [
-        watchResourceDir(),
-    ]
+        publicDir: false,
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    silenceDeprecations: [
+                        'import',
+                        'mixed-decls',
+                        'color-functions',
+                        'global-builtin',
+                        'if-function',
+                    ],
+                },
+            },
+        },
+        plugins: [
+            watchResourceDir(),
+        ]
+    }
 })
-
 function watchResourceDir() {
     return {
         name: 'vite-plugin-sturdy-framework',
@@ -52,4 +55,8 @@ function watchResourceDir() {
             return []
         },
     }
+}
+
+function getHostIp() {
+
 }
