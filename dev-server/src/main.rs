@@ -14,6 +14,11 @@ use watchexec_supervisor::job::start_job;
 
 #[tokio::main]
 async fn main() {
+    // todo Possibly refactor `cargo run` into separate service and only
+    // todo run `cargo build` here. This will allow us to keep the app
+    // todo server running while build is running. We can watch the
+    // todo target/debug/binary file for changes, and restart
+    // todo the app server with near zero downtime.
     let mut addrs_iter = "node:5173".to_socket_addrs().unwrap();
     let vite_url = addrs_iter.next().unwrap().to_string();
     let dev_server_root = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
