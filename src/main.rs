@@ -36,10 +36,11 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
     let mut doc_pages = HashMap::new();
     doc_pages.insert("intro", DocPage {
-        title: "About Sturdy Framework",
+        title: "Introduction",
         description: "Sturdy Framework is a modern, Rust-based framework built for the modern web.",
         md_template: "intro.md",
         route_name: "docs.intro",
+        index: 0,
     });
     doc_pages.insert(
         "install",
@@ -48,6 +49,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             description: "Get started with Sturdy Framework.",
             md_template: "install.md",
             route_name: "docs.install",
+            index: 1,
         },
     );
     doc_pages.insert(
@@ -57,6 +59,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             description: "Register your app/website's routes with Sturdy Framework.",
             md_template: "routing.md",
             route_name: "docs.routing",
+            index: 2,
         },
     );
     doc_pages.insert(
@@ -66,6 +69,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             description: "Actions are Rust structs that implement the Action trait.",
             md_template: "actions.md",
             route_name: "docs.actions",
+            index: 3,
         },
     );
     doc_pages.insert(
@@ -75,6 +79,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             description: "Learn how to initialize the watcher and run the development environment.",
             md_template: "auto-reload.md",
             route_name: "docs.auto-reload",
+            index: 4,
         },
     );
 

@@ -1,7 +1,0 @@
-{% extends "layout/base.html" %}
-{% block main %}
-<div id="app">
-    {% include "layout/partial/navbar.html" %}
-    {% block content %}{% endblock %}
-</div>
-{% endblock %}

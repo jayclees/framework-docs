@@ -6,8 +6,8 @@ use framework::http::error::HttpError;
 use framework::http::request::HttpRequest;
 use markdown::to_html;
 use minijinja::context;
-use std::fs::read_to_string;
 use serde::Serialize;
+use std::fs::read_to_string;
 
 #[derive(Debug, Clone)]
 pub struct StandardPage {
@@ -62,6 +62,7 @@ pub struct DocPage {
     pub description: &'static str,
     pub md_template: &'static str,
     pub route_name: &'static str,
+    pub index: u8,
 }
 
 impl DocPage {
@@ -70,12 +71,14 @@ impl DocPage {
         description: &'static str,
         md_template: &'static str,
         route_name: &'static str,
+        index: u8,
     ) -> DocPage {
         DocPage {
             title,
             description,
             md_template,
             route_name,
+            index,
         }
     }
 }
@@ -85,19 +88,24 @@ impl Action for DocPage {
     async fn handle(
         &self,
         app: &App,
-        _request: HttpRequest,
+        request: HttpRequest,
     ) -> Result<Box<dyn Responsable>, HttpError> {
-        let state: &AppState = &app.state.downcast_ref().unwrap();
-        let doc_pages = Vec::from_iter(&mut state.doc_pages.iter());
+        let state: &AppState = &app.state();
+        let mut doc_pages = Vec::from_iter(&mut state.doc_pages.iter());
+        // Vec::from_iter is scrambling the order.
+        doc_pages.sort_by(|(_, a), (_, b)| a.index.cmp(&b.index));
         let md = read_to_string(format!("resource/template/docs/md/{}", self.md_template));
 
         match md {
             Ok(md) => {
                 let html = to_html(md.as_str());
-                let result = app.template("docs/show.html", context!(
-                    doc_pages,
-                    content => html,
-                ));
+                let result = app.template(
+                    "docs/show.html",
+                    context!(
+                        doc_pages,
+                        content => html,
+                    ),
+                );
 
                 match result {
                     Ok(rendered) => text(rendered),

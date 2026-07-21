@@ -8,11 +8,13 @@
     {% block head %}
     <title>{{ app_title }}</title>
     {% endblock %}
+    <link rel="stylesheet" href="/prism.css">
     <link rel="stylesheet" href="http://{{ vite_url }}/resource/scss/main.scss">
 </head>
 <body>
 {% block main %}{% endblock %}
 <script type="module" src="http://{{ vite_url }}/@vite/client"></script>
 <script type="module" src="http://{{ vite_url }}/resource/js/main.js"></script>
+<script src="/prism.js"></script>
 </body>
 </html>
