@@ -1,10 +1,24 @@
 @import './bootstrap';
+@import './font';
+
+:root {
+  --bs-body-font-family: dejavue, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--bs-body-font-family), serif;
+}
 
 // This prevents stuttering when prism.js highlights code on load.
 article {
   pre {
     padding: 1em;
-    margin: .5em 0;
+    margin: 0 0 1rem 0!important;
     border: 2px solid hsl(0, 0%, 33%)!important;
     color: #f8f8f2;
     background: 0 0;
