@@ -8,11 +8,15 @@ server {
 
     location / {
         root /var/www/public;
-        try_files $uri $uri/;
+        try_files $uri $uri/ @app;
         gzip_static on;
     }
 
-    location ~ .* {
-        proxy_pass http://${APP_HOST}:${APP_PORT}$uri;
+    location = / {
+        proxy_pass http://${APP_HOST}:${APP_PORT}$uri?$query_string;
+    }
+
+    location @app {
+        proxy_pass http://${APP_HOST}:${APP_PORT}$uri?$query_string;
     }
 }
