@@ -4,7 +4,7 @@ use framework::action::{text, Action, Responsable};
 use framework::app::App;
 use framework::http::error::HttpError;
 use framework::http::request::HttpRequest;
-use markdown::to_html;
+use markdown::{to_html_with_options, CompileOptions, Options};
 use minijinja::context;
 use serde::Serialize;
 use std::fs::read_to_string;
@@ -88,7 +88,7 @@ impl Action for DocPage {
     async fn handle(
         &self,
         app: &App,
-        request: HttpRequest,
+        _request: HttpRequest,
     ) -> Result<Box<dyn Responsable>, HttpError> {
         let state: &AppState = &app.state();
         let mut doc_pages = Vec::from_iter(&mut state.doc_pages.iter());
@@ -98,7 +98,13 @@ impl Action for DocPage {
 
         match md {
             Ok(md) => {
-                let html = to_html(md.as_str());
+                let html = to_html_with_options(md.as_str(), &Options {
+                    compile: CompileOptions {
+                        allow_dangerous_html: true,
+                        ..CompileOptions::default()
+                    },
+                    ..Options::default()
+                }).unwrap();
                 let result = app.template(
                     "docs/show.html",
                     context!(

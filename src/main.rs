@@ -22,6 +22,7 @@ use serde::Serialize;
 #[derive(Debug)]
 struct AppState {
     env: Env,
+    app_name: &'static str,
     pub pages: Vec<StandardPage>,
     pub doc_pages: Arc<HashMap<&'static str, DocPage>>,
 }
@@ -43,12 +44,12 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         index: 0,
     });
     doc_pages.insert(
-        "install",
+        "getting-started",
         DocPage {
-            title: "Install",
+            title: "Getting Started",
             description: "Get started with Sturdy Framework.",
-            md_template: "install.md",
-            route_name: "docs.install",
+            md_template: "getting-started.md",
+            route_name: "docs.getting-started",
             index: 1,
         },
     );
@@ -65,11 +66,21 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     doc_pages.insert(
         "actions",
         DocPage {
-            title: "Route Actions",
+            title: "Actions",
             description: "Actions are Rust structs that implement the Action trait.",
             md_template: "actions.md",
             route_name: "docs.actions",
             index: 3,
+        },
+    );
+    doc_pages.insert(
+        "templates",
+        DocPage {
+            title: "Templates",
+            description: "Use minijinja's powerful templating engine.",
+            md_template: "templates.md",
+            route_name: "docs.templates",
+            index: 4,
         },
     );
     doc_pages.insert(
@@ -79,7 +90,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             description: "Learn how to initialize the watcher and run the development environment.",
             md_template: "auto-reload.md",
             route_name: "docs.auto-reload",
-            index: 4,
+            index: 5,
         },
     );
 
@@ -89,6 +100,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             debug: false,
             vite_url: None,
         },
+        app_name: "Sturdy Framework",
         pages: vec![
             StandardPage::new(
                 "/",
