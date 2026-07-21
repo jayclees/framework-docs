@@ -3,11 +3,23 @@
 <main id="app">
     <section>
         <div class="container py-5">
-            <h1>Sturdy Framework</h1>
+            <h1>{{ title }}</h1>
             <p class="important">{{ description }}</p>
-            <p><a href="/about">About page</a></p>
+            <p>
+                <a href="/docs/intro" class="btn btn-primary"></a>
+            </p>
         </div>
     </section>
-
+    <section>
+        <div class="container">
+            <h1>Features</h1>
+            <ul>
+                <li>Full-featured routing system.</li>
+                <li>Customizable route actions.</li>
+                <li>Auto compile when code changes.</li>
+                <li>Autoload templates when updated.</li>
+            </ul>
+        </div>
+    </section>
 </main>
 {% endblock %}

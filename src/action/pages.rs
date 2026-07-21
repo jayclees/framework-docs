@@ -1,3 +1,4 @@
+use crate::AppState;
 use async_trait::async_trait;
 use framework::action::{text, Action, Responsable};
 use framework::app::App;
@@ -6,24 +7,28 @@ use framework::http::request::HttpRequest;
 use markdown::to_html;
 use minijinja::context;
 use std::fs::read_to_string;
+use serde::Serialize;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct StandardPage {
-    title: &'static str,
-    description: &'static str,
-    template: &'static str,
+    pub path: &'static str,
+    pub route_name: &'static str,
+    pub template: &'static str,
+    pub seo: Seo,
 }
 
 impl StandardPage {
     pub fn new(
-        title: &'static str,
-        description: &'static str,
+        path: &'static str,
+        route_name: &'static str,
         template: &'static str,
+        seo: Seo,
     ) -> StandardPage {
         StandardPage {
-            title,
-            description,
+            path,
+            route_name,
             template,
+            seo,
         }
     }
 }
@@ -38,8 +43,8 @@ impl Action for StandardPage {
         let result = app.template(
             &self.template,
             context! {
-                title => self.title,
-                description => self.description,
+                title => self.seo.0,
+                description => self.seo.1,
                 template => self.template,
             },
         );
@@ -51,24 +56,48 @@ impl Action for StandardPage {
     }
 }
 
-#[derive(Debug)]
-pub struct DocsPage;
+#[derive(Debug, Clone, Serialize)]
+pub struct DocPage {
+    pub title: &'static str,
+    pub description: &'static str,
+    pub md_template: &'static str,
+    pub route_name: &'static str,
+}
+
+impl DocPage {
+    pub fn new(
+        title: &'static str,
+        description: &'static str,
+        md_template: &'static str,
+        route_name: &'static str,
+    ) -> DocPage {
+        DocPage {
+            title,
+            description,
+            md_template,
+            route_name,
+        }
+    }
+}
 
 #[async_trait]
-impl Action for DocsPage {
+impl Action for DocPage {
     async fn handle(
         &self,
         app: &App,
-        request: HttpRequest,
+        _request: HttpRequest,
     ) -> Result<Box<dyn Responsable>, HttpError> {
-        // First load and parse md file
-        let doc = request.var("slug").unwrap();
-        let md = read_to_string(format!("resource/template/docs/md/{doc}.md"));
+        let state: &AppState = &app.state.downcast_ref().unwrap();
+        let doc_pages = Vec::from_iter(&mut state.doc_pages.iter());
+        let md = read_to_string(format!("resource/template/docs/md/{}", self.md_template));
 
         match md {
             Ok(md) => {
                 let html = to_html(md.as_str());
-                let result = app.template("docs/show.html", context!(content => html));
+                let result = app.template("docs/show.html", context!(
+                    doc_pages,
+                    content => html,
+                ));
 
                 match result {
                     Ok(rendered) => text(rendered),
@@ -79,3 +108,6 @@ impl Action for DocsPage {
         }
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct Seo(pub &'static str, pub &'static str);

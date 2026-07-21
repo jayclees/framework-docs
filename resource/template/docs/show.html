@@ -10,7 +10,9 @@
             <div class="sticky-top top-0 p-3">
                 <h4>Table of Contents:</h4>
                 <ul>
-                    <li><a href="/docs/about">About</a></li>
+                    {% for key, value in doc_pages %}
+                    <li><a href="/docs/{{ key }}">{{ value.title }}</a></li>
+                    {% endfor %}
                 </ul>
             </div>
         </aside>
