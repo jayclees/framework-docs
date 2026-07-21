@@ -12,7 +12,7 @@ async fn handle(
     app: &App,
     request: HttpRequest,
 ) -> Result<Box<dyn Responsable>, HttpError> {
-    // App logic here...
+    Box::new("Hello world!")
 }
 ```
 
@@ -20,6 +20,7 @@ From the `handle` method, a type (wrapped in `Box`) that implements `Responsable
 
 These include:
 
+- `&str`
 - `String`
 - `Vec<usize>`
 - `[usize; N]`

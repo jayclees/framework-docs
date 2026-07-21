@@ -1,4 +1,10 @@
 {% extends "layout/app.html" %}
+{% if seo_title %}
+{% block head %}
+<title>{{ seo_title }}</title>
+<meta name="description" content="{{ seo_description }}">
+{% endblock %}
+{% endif %}
 {% block content %}
 <div class="container py-5">
     <h1>About Us</h1>

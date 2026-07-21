@@ -20,8 +20,8 @@ fn register_routes(router: Router) {
     router.get("/about", AboutPage);
     
     // Or...
-    router.get("/", MyPage("Landing Page Title", "Landing Page Description", "landing-template.html"));
-    router.get("/about", MyPage("About Page Title", "About Page Description", "about-template.html"));
+    router.get("/", Page("Landing Title", "Landing Description", "landing.html"));
+    router.get("/about", Page("About Title", "About Description", "about.html"));
 }
 ```
 
@@ -37,7 +37,7 @@ You may register route variables for dynamic route matching.
 router.get("/user/{user}", ShowUser);
 ```
 
-In your `Action`'s `handle` method:
+In your [`Action`](/docs/actions)'s `handle` method:
 
 ```rust
 // Request: /user/123

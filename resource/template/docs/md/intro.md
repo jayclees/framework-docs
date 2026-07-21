@@ -6,8 +6,7 @@ Sturdy aims to reduce the use of macros. While macros can reduce lines of code, 
 
 Our route endpoints are structs that implement the `Action` trait with a `handle` method. This allows you much freedom to design your routing pattern in any way you like.
 
-&nbsp;
-
+`src/routes.js`:
 ```rust
 // Method #1: Shared structs.
 router.get("/docs/intro", DocsPage { title: "Intro to Sturdy", md: "intro.md" });

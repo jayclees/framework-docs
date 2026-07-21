@@ -64,7 +64,7 @@ These will boot up the `.rs` file watcher server, and reboot the app server.
 
 ---
 
-Sturdy uses [Vite](https://vite.dev/) for front-end asset handling. Vite will watch the files in your `project/resource` directory, and compile assets.
+Sturdy uses [Vite](https://vite.dev/) for front-end asset handling. Vite will watch the files in your `project/resource` directory, compile assets, and send reload requests to the loaded client browser.
 
 Vite is also configured to watch `target/debug/your_app_binary`. When it is modified, Vite will send a reload event to the client browser. This eliminates the need for manual refreshing.
 

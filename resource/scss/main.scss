@@ -1,3 +1,28 @@
 @import './bootstrap';
 
-// App styles here.
+// This prevents stuttering when prism.js highlights code on load.
+article {
+  pre {
+    padding: 1em;
+    margin: .5em 0;
+    border: .3em solid hsl(0, 0%, 33%);
+    color: #f8f8f2;
+    background: 0 0;
+    text-shadow: 0 1px rgba(0, 0, 0, .3);
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 1em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+  }
+}

@@ -43,9 +43,46 @@ impl Action for StandardPage {
         let result = app.template(
             &self.template,
             context! {
-                title => self.seo.0,
-                description => self.seo.1,
-                template => self.template,
+                // seo_title => self.seo.0,
+                seo_description => self.seo.1,
+                // template => self.template,
+            },
+        );
+
+        match result {
+            Ok(template) => text(template),
+            Err(error) => Err(HttpError::new(500, error.to_string())),
+        }
+    }
+}
+
+
+#[derive(Debug, Clone)]
+pub struct DocIndexPage {
+    pub seo: Seo,
+}
+
+impl DocIndexPage {
+    pub fn new(seo: Seo) -> DocIndexPage {
+        DocIndexPage { seo }
+    }
+}
+
+#[async_trait]
+impl Action for DocIndexPage {
+    async fn handle(
+        &self,
+        app: &App,
+        _request: HttpRequest,
+    ) -> Result<Box<dyn Responsable>, HttpError> {
+        let mut doc_pages = &app.state::<AppState>().doc_pages_vec();
+        dbg!(&doc_pages);
+        let result = app.template(
+            "docs/index.html",
+            context! {
+                doc_pages,
+                seo_title => self.seo.0,
+                seo_description => self.seo.1,
             },
         );
 
@@ -90,21 +127,22 @@ impl Action for DocPage {
         app: &App,
         _request: HttpRequest,
     ) -> Result<Box<dyn Responsable>, HttpError> {
-        let state: &AppState = &app.state();
-        let mut doc_pages = Vec::from_iter(&mut state.doc_pages.iter());
-        // Vec::from_iter is scrambling the order.
-        doc_pages.sort_by(|(_, a), (_, b)| a.index.cmp(&b.index));
+        let mut doc_pages = &app.state::<AppState>().doc_pages_vec();
         let md = read_to_string(format!("resource/template/docs/md/{}", self.md_template));
-
+        //
         match md {
             Ok(md) => {
-                let html = to_html_with_options(md.as_str(), &Options {
-                    compile: CompileOptions {
-                        allow_dangerous_html: true,
-                        ..CompileOptions::default()
+                let html = to_html_with_options(
+                    md.as_str(),
+                    &Options {
+                        compile: CompileOptions {
+                            allow_dangerous_html: true,
+                            ..CompileOptions::default()
+                        },
+                        ..Options::default()
                     },
-                    ..Options::default()
-                }).unwrap();
+                )
+                .unwrap();
                 let result = app.template(
                     "docs/show.html",
                     context!(

@@ -2,7 +2,7 @@ mod action;
 mod entity;
 mod routes;
 
-use crate::action::pages::{DocPage, Seo, StandardPage};
+use crate::action::pages::{DocIndexPage, DocPage, Seo, StandardPage};
 use framework::app::{App, Env};
 use framework::cli::Registry;
 use framework::error::register_panic_hook;
@@ -11,20 +11,34 @@ use framework::support::logger::Logger;
 use minijinja::{path_loader, Environment};
 use minijinja_autoreload::AutoReloader;
 use sea_orm::{ConnectOptions, Database, DatabaseConnection};
+use serde::Serialize;
 use std::collections::HashMap;
 use std::env;
 use std::error::Error;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::Duration;
-use serde::Serialize;
 
 #[derive(Debug)]
 struct AppState {
     env: Env,
     app_name: &'static str,
-    pub pages: Vec<StandardPage>,
+    pub standard_pages: Vec<StandardPage>,
     pub doc_pages: Arc<HashMap<&'static str, DocPage>>,
+}
+
+impl AppState {
+    pub fn doc_pages_vec(&self) -> Vec<(&'static str, &DocPage)> {
+        let mut doc_pages: Vec<(&'static str, &DocPage)> = Vec::with_capacity(self.doc_pages.len());
+
+        for (k, v) in self.doc_pages.iter() {
+            doc_pages.push((*k, v));
+        }
+
+        // Vec::from_iter is scrambling the order.
+        doc_pages.sort_by(|(_, a), (_, b)| a.index.cmp(&b.index));
+        doc_pages
+    }
 }
 
 #[tokio::main]
@@ -101,7 +115,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             vite_url: None,
         },
         app_name: "Sturdy Framework",
-        pages: vec![
+        standard_pages: vec![
             StandardPage::new(
                 "/",
                 "landing",
@@ -120,23 +134,24 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                     "A New Framework Designed For The Modern Web.",
                 ),
             ),
-            StandardPage::new(
-                "/docs",
-                "docs",
-                "docs/index.html",
-                Seo(
-                    "Documentation - Sturdy Framework",
-                    "Learn about the features of Sturdy Framework.",
-                ),
-            ),
         ],
         doc_pages: Arc::new(doc_pages),
     };
 
     let router = Router::new(|router| {
-        for page in state.pages.clone() {
+        for page in state.standard_pages.clone() {
             router.getn(page.path, page.clone(), page.route_name);
         }
+        router.getn(
+            "/docs",
+            DocIndexPage {
+                seo: Seo(
+                    "Documentation - Sturdy Framework",
+                    "Learn about the features of Sturdy Framework.",
+                ),
+            },
+            "docs.index",
+        );
         for (key, doc_page) in state.doc_pages.clone().iter() {
             let route_name = doc_page.route_name;
             router.getn(
