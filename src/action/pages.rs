@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use crate::AppState;
 use async_trait::async_trait;
 use framework::action::{text, Action, Responsable};
@@ -45,7 +46,6 @@ impl Action for StandardPage {
             context! {
                 title => self.seo.0,
                 description => self.seo.1,
-                // template => self.template,
             },
         );
 
@@ -55,7 +55,6 @@ impl Action for StandardPage {
         }
     }
 }
-
 
 #[derive(Debug, Clone)]
 pub struct DocIndexPage {
@@ -128,7 +127,7 @@ impl Action for DocPage {
     ) -> Result<Box<dyn Responsable>, HttpError> {
         let mut doc_pages = &app.state::<AppState>().doc_pages_vec();
         let md = read_to_string(format!("resource/template/docs/md/{}", self.md_template));
-        //
+
         match md {
             Ok(md) => {
                 let html = to_html_with_options(
