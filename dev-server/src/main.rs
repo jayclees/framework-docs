@@ -114,7 +114,7 @@ async fn main() {
     })
     .unwrap();
 
-    wx.config.pathset([app_src]);
+    wx.config.pathset([app_root]);
     wx.main().await.unwrap().unwrap();
 
     job.delete_now().await;
