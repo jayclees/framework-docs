@@ -2,16 +2,8 @@ import { defineConfig } from 'vite'
 import dns from 'node:dns/promises'
 
 export default defineConfig(async ({ command, mode, isSsrBuild, isPreview }) => {
-    let nginxAddr = await dns.lookup('nginx').then((result) => result.address)
-    return {
+    let config = {
         logLevel: 'info',
-        server: {
-            cors: {
-                // This needs to be equal to the url (origin) you see in the address bar
-                origin: `http://${nginxAddr}`,
-            },
-            origin: `http://${nginxAddr}`,
-        },
         build: {
             // generate .vite/manifest.json in outDir
             manifest: true,
@@ -41,6 +33,19 @@ export default defineConfig(async ({ command, mode, isSsrBuild, isPreview }) => 
             watchResourceDir(),
         ]
     }
+
+    if (process.env.IS_DOCKER === '1') {
+        let nginxAddr = await dns.lookup('nginx').then((result) => result.address)
+        config.server = {
+            cors: {
+                // This needs to be equal to the url (origin) you see in the address bar
+                origin: `http://${nginxAddr}`,
+            },
+            origin: `http://${nginxAddr}`,
+        }
+    }
+
+    return config
 })
 
 function watchResourceDir() {
