@@ -48,7 +48,7 @@ impl Action for StandardPage {
                 // template => self.template,
             },
         );
-//
+
         match result {
             Ok(template) => text(template),
             Err(error) => Err(HttpError::new(500, error.to_string())),
@@ -76,7 +76,6 @@ impl Action for DocIndexPage {
         _request: HttpRequest,
     ) -> Result<Box<dyn Responsable>, HttpError> {
         let mut doc_pages = &app.state::<AppState>().doc_pages_vec();
-        dbg!(&doc_pages);
         let result = app.template(
             "docs/index.html",
             context! {
