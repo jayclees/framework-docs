@@ -42,6 +42,7 @@ export default defineConfig(async ({ command, mode, isSsrBuild, isPreview }) => 
         ]
     }
 })
+
 function watchResourceDir() {
     return {
         name: 'vite-plugin-sturdy-framework',
@@ -55,8 +56,4 @@ function watchResourceDir() {
             return []
         },
     }
-}
-
-function getHostIp() {
-
 }
