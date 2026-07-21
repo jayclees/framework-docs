@@ -779,6 +779,7 @@ version = "0.1.0"
 dependencies = [
  "dns-lookup",
  "framework",
+ "notify",
  "notify-types",
  "tokio",
  "watchexec",
@@ -969,6 +970,7 @@ dependencies = [
  "sea-orm",
  "serde",
  "serde_json",
+ "serde_qs",
  "tokio",
 ]
 
@@ -2718,6 +2720,18 @@ dependencies = [
  "serde",
  "serde_core",
  "zmij",
+]
+
+[[package]]
+name = "serde_qs"
+version = "1.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "67d525c8ff68aa99e5818302259bdd02d86d0303710616f39c0f44846ff6d332"
+dependencies = [
+ "itoa",
+ "percent-encoding",
+ "ryu",
+ "serde",
 ]
 
 [[package]]
