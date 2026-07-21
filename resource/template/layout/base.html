@@ -9,12 +9,20 @@
     <title>Sturdy Framework</title>
     {% endblock %}
     <link rel="stylesheet" href="/prism.css">
-    <link rel="stylesheet" href="http://{{ vite_url }}/resource/scss/main.scss">
+    {% if env.env == 'production' %}
+    <link rel="stylesheet" href="/dist/{{ vite_manifest['resource/js/main.js'].css[0] }}"></link>
+    {% else %}
+    <link rel="stylesheet" href="http://{{ env.vite_url }}/resource/scss/main.scss">
+    {% endif %}
 </head>
 <body>
 {% block main %}{% endblock %}
-<script type="module" src="http://{{ vite_url }}/@vite/client"></script>
-<script type="module" src="http://{{ vite_url }}/resource/js/main.js"></script>
+{% if env.env == 'production' %}
+<script type="module" src="/dist/{{ vite_manifest['resource/js/main.js'].file }}"></script>
+{% else %}
+<script type="module" src="http://{{ env.vite_url }}/@vite/client"></script>
+<script type="module" src="http://{{ env.vite_url }}/resource/js/main.js"></script>
+{% endif %}
 <script src="/prism.js"></script>
 </body>
 </html>

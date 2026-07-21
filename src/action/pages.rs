@@ -43,12 +43,12 @@ impl Action for StandardPage {
         let result = app.template(
             &self.template,
             context! {
-                // seo_title => self.seo.0,
-                seo_description => self.seo.1,
+                title => self.seo.0,
+                description => self.seo.1,
                 // template => self.template,
             },
         );
-
+//
         match result {
             Ok(template) => text(template),
             Err(error) => Err(HttpError::new(500, error.to_string())),
@@ -81,8 +81,8 @@ impl Action for DocIndexPage {
             "docs/index.html",
             context! {
                 doc_pages,
-                seo_title => self.seo.0,
-                seo_description => self.seo.1,
+                title => self.seo.0,
+                description => self.seo.1,
             },
         );
 

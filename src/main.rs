@@ -134,6 +134,15 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                     "A New Framework Designed For The Modern Web.",
                 ),
             ),
+            StandardPage::new(
+                "/license",
+                "license",
+                "license.html",
+                Seo(
+                    "License - Sturdy Framework",
+                    "Sturdy Framework license.",
+                ),
+            ),
         ],
         doc_pages: Arc::new(doc_pages),
     };
@@ -163,7 +172,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     });
     let template_reloader = reloader();
     let db = db().await?;
-    let env = Env::new("local".to_string(), true, Some(vite_url));
+    let env = Env::new("production".to_string(), true, Some(vite_url));
     let addr = format!("{host}:{port}");
     let app = App::new(
         router,

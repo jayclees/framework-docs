@@ -1,12 +1,12 @@
 {% extends "layout/app.html" %}
 {% block head %}
-<title>{{ seo_title }}</title>
-<meta name="description" content="{{ seo_description }}">
+<title>{{ title }}</title>
+<meta name="description" content="{{ description }}">
 {% endblock %}
 {% block content %}
 <div class="container py-5">
     <h1>Documentation</h1>
-    <p>{{ seo_description }}</p>
+    <p>{{ description }}</p>
     <hr>
     <div class="row">
         {% for key, value in doc_pages %}
