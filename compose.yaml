@@ -25,6 +25,7 @@ services:
     working_dir: /home/node/app
     environment:
       NODE_ENV: development
+      IS_DOCKER: 1
     volumes:
       - ./:/home/node/app
 
