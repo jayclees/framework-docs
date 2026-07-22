@@ -21,7 +21,6 @@ use std::time::Duration;
 
 #[derive(Debug)]
 struct AppState {
-    env: Env,
     app_name: &'static str,
     pub standard_pages: Vec<StandardPage>,
     pub doc_pages: Arc<HashMap<&'static str, DocPage>>,
@@ -109,11 +108,6 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     );
 
     let state = AppState {
-        env: Env {
-            env: "local".to_string(),
-            debug: false,
-            vite_url: None,
-        },
         app_name: "Sturdy Framework",
         standard_pages: vec![
             StandardPage::new(
@@ -172,8 +166,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     });
     let template_reloader = reloader();
     let db = db().await?;
-    // todo remove this, use the one in AppStruct.
-    let env = Env::new("local".to_string(), true, Some(vite_url));
+    let env = Env::new(env::var("APP_ENV")?, true, Some(vite_url));
     let addr = format!("{host}:{port}");
     let app = App::new(
         router,
