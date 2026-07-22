@@ -10,7 +10,7 @@
             <div class="sticky-top top-0 px-3 py-5">
                 <h4>Table of Contents:</h4>
                 <ul>
-                    {% for key, value in doc_pages|dictsort %}
+                    {% for key, value in doc_pages %}
                     <li><a href="/docs/{{ key }}">{{ value.title }}</a></li>
                     {% endfor %}
                 </ul>
