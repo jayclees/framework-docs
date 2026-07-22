@@ -9,11 +9,11 @@ Our route endpoints are structs that implement the `Action` trait with a `handle
 `src/routes.js`:
 ```rust
 // Method #1: Shared structs.
-router.get("/docs/intro", DocsPage { title: "Intro to Sturdy", md: "intro.md" });
-router.get("/docs/getting-started", DocsPage { title: "Installation", md: "getting-started.md" });
+router.get("/docs/intro", DocPage { title: "Intro to Sturdy", md: "intro.md" });
+router.get("/docs/getting-started", DocPage { title: "Installation", md: "getting-started.md" });
 
 // Method #2 (resolve md file using slug in handler):
-router.get("/docs/{slug}", DocsPage);
+router.get("/docs/{slug}", DocPage);
 
 // Method #3: Specific struct for specific route.
 router.get("/docs/intro", DocIntroPage);
@@ -24,6 +24,6 @@ router.get("/docs/getting-started", DocGettingStartedPage);
 
 &nbsp;
 
-Further reading:
+Next steps:
 
 - [Install](/docs/install)

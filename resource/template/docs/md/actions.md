@@ -38,6 +38,6 @@ To learn more about templating in Sturdy, visit the following page.
 
 &nbsp;
 
-Further reading:
+Next steps:
 
 - [Templates](/docs/templates)

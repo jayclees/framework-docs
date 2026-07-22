@@ -90,7 +90,7 @@ router.getm(
 
 &nbsp;
 
-Further reading:
+Next steps:
 
 - [Actions](/docs/actions)
 - [Templates](/docs/templates)

@@ -70,6 +70,6 @@ Vite is also configured to watch `target/debug/your_app_binary`. When it is modi
 
 &nbsp;
 
-Further reading:
+Next steps:
 
 - [Routing](/docs/routing)
