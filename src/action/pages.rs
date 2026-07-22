@@ -1,14 +1,13 @@
-use std::collections::HashMap;
 use crate::AppState;
 use async_trait::async_trait;
-use framework::action::{text, Action, Responsable};
-use framework::app::App;
-use framework::http::error::HttpError;
-use framework::http::request::HttpRequest;
 use markdown::{to_html_with_options, CompileOptions, Options};
 use minijinja::context;
 use serde::Serialize;
 use std::fs::read_to_string;
+use sturdy::action::{text, Action, Responsable};
+use sturdy::app::App;
+use sturdy::http::error::HttpError;
+use sturdy::http::request::HttpRequest;
 
 #[derive(Debug, Clone)]
 pub struct StandardPage {
@@ -140,7 +139,7 @@ impl Action for DocPage {
                         ..Options::default()
                     },
                 )
-                .unwrap();
+                    .unwrap();
                 let result = app.template(
                     "docs/show.html",
                     context!(

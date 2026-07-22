@@ -3,11 +3,6 @@ mod entity;
 mod routes;
 
 use crate::action::pages::{DocIndexPage, DocPage, Seo, StandardPage};
-use framework::app::{App, Env};
-use framework::cli::Registry;
-use framework::error::register_panic_hook;
-use framework::routing::router::Router;
-use framework::support::logger::Logger;
 use minijinja::{path_loader, Environment};
 use minijinja_autoreload::AutoReloader;
 use sea_orm::{ConnectOptions, Database, DatabaseConnection};
@@ -18,6 +13,11 @@ use std::error::Error;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::Duration;
+use sturdy::app::{App, Env};
+use sturdy::cli::Registry;
+use sturdy::error::register_panic_hook;
+use sturdy::routing::router::Router;
+use sturdy::support::logger::Logger;
 
 #[derive(Debug)]
 struct AppState {
@@ -132,10 +132,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                 "/license",
                 "license",
                 "license.html",
-                Seo(
-                    "License - Sturdy Framework",
-                    "Sturdy Framework license.",
-                ),
+                Seo("License - Sturdy Framework", "Sturdy Framework license."),
             ),
         ],
         doc_pages: Arc::new(doc_pages),
@@ -177,10 +174,10 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         env,
         Box::new(state),
     )
-    .await;
+        .await;
     let app = Arc::new(app);
 
-    framework::app::run(app).await
+    sturdy::app::run(app).await
 }
 
 async fn db() -> Result<DatabaseConnection, Box<dyn Error + Send + Sync>> {

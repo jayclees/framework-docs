@@ -1,5 +1,4 @@
-use crate::action::pages::{DocPage, StandardPage};
-use framework::routing::router::Router;
+use sturdy::routing::router::Router;
 
 pub fn register_routes(_router: &mut Router) -> () {
     // let mut pages = vec![];
