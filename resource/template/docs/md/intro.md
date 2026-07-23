@@ -26,4 +26,4 @@ router.get("/docs/getting-started", DocGettingStartedPage);
 
 Next steps:
 
-- [Install](/docs/install)
+- [Getting Started](/docs/getting-started)
