@@ -113,14 +113,10 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "dotenvy",
- "hyper",
- "log",
  "markdown",
  "minijinja",
- "minijinja-autoreload",
  "sea-orm",
  "serde",
- "serde_json",
  "sturdy",
  "tokio",
 ]
@@ -3032,6 +3028,7 @@ dependencies = [
  "http-body-util",
  "hyper",
  "hyper-util",
+ "log",
  "minijinja",
  "minijinja-autoreload",
  "regex",
