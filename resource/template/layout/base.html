@@ -10,7 +10,7 @@
     {% endblock %}
     <link rel="stylesheet" href="/prism.css">
     {% if env.env == 'Production' %}
-    <link rel="stylesheet" href="/dist/{{ vite_manifest['resource/js/main.js'].css[0] }}"></link>
+    <link rel="stylesheet" href="/dist/{{ vite_manifest['resource/js/main.js'].css[0] }}">
     {% else %}
     <link rel="stylesheet" href="http://{{ env.vite_url }}/resource/scss/main.scss">
     {% endif %}
