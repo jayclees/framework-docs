@@ -14,11 +14,11 @@ cd my-project
 ## Running the app
 
 ---
-There are several ways you can run the environment. We recommend using [Docker](https://docs.docker.com/get-started/docker-overview/) to for service isolation and security.
+There are several ways you can run the environment. We recommend using [Docker](https://docs.docker.com/get-started/docker-overview/) to for service isolation and security. If you do not wish to run your environment using Docker, you may skip to the "Without Docker" section below.
 
 &nbsp;
 
-### Running with Docker
+## Running with Docker
 
 ---
 
@@ -35,9 +35,43 @@ This will boot up three services:
 - The `nginx` service, which will proxy requests to your `app` service. This is because Sturdy does not handle serving static assets such as `yourdomain.com/robots.txt` (which will be in `my-project/public` directory).
 - The `node` service, which will run `vite` to handle front-end asset bundling, and reloading the client browser when any change is made to front-end or back-end files.
 
+Next you will need to find the IP address of the Nginx container. This is usually one of:
+
+- 172.19.0.2
+- 172.19.0.3
+- 172.19.0.4
+
+To find the exact IP address, run the following:
+
+```shell
+docker compose ps
+```
+
+You will see output similar to:
+
+```
+NAME                 IMAGE              COMMAND                  SERVICE   CREATED          STATUS          PORTS
+my-project-app-1     my-project-app     "/bin/bash -c 'cargo…"   app       10 seconds ago   up 9 seconds   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+my-project-nginx-1   my-project-nginx   "/docker-entrypoint.…"   nginx     10 seconds ago   up 9 seconds   80/tcp
+my-project-node-1    my-project-node    "docker-entrypoint.s…"   node      10 seconds ago   up 9 seconds
+```
+
+We will use `my-project-nginx-1` to run `docker inspect` on. This will give us the local IP address your website will be running on.
+
+```shell
+# Get IP address of Nginx container
+docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' \
+    my-project-nginx-1
+# 172.19.0.x
+```
+
+The resulting IP address is where your website will be accessible.
+
 &nbsp;
 
-### Without Docker
+&nbsp;
+
+## Without Docker
 
 ---
 
@@ -60,7 +94,7 @@ These will boot up the `.rs` file watcher server, and reboot the app server.
 
 &nbsp;
 
-### Vite
+## Vite
 
 ---
 

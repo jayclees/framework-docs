@@ -60,12 +60,12 @@ impl AppState {
             },
         );
         doc_pages.insert(
-            "auto-reload",
+            "deploying",
             DocPage {
-                title: "Auto Reload",
-                description: "Learn how to initialize the watcher and run the development environment.",
-                md_template: "auto-reload.md",
-                route_name: "docs.auto-reload",
+                title: "Launching Your Website",
+                description: "Learn how to launch your website onto the web.",
+                md_template: "deploying.md",
+                route_name: "docs.deploying",
                 index: 5,
             },
         );
