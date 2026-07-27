@@ -60,12 +60,6 @@ pub struct DocIndexPage {
     pub seo: Seo,
 }
 
-impl DocIndexPage {
-    pub fn new(seo: Seo) -> DocIndexPage {
-        DocIndexPage { seo }
-    }
-}
-
 #[async_trait]
 impl Action for DocIndexPage {
     async fn handle(
@@ -99,24 +93,6 @@ pub struct DocPage {
     pub index: u8,
 }
 
-impl DocPage {
-    pub fn new(
-        title: &'static str,
-        description: &'static str,
-        md_template: &'static str,
-        route_name: &'static str,
-        index: u8,
-    ) -> DocPage {
-        DocPage {
-            title,
-            description,
-            md_template,
-            route_name,
-            index,
-        }
-    }
-}
-
 #[async_trait]
 impl Action for DocPage {
     async fn handle(
@@ -139,7 +115,7 @@ impl Action for DocPage {
                         ..Options::default()
                     },
                 )
-                    .unwrap();
+                .unwrap();
                 let result = app.template(
                     "docs/show.html",
                     context!(
@@ -160,3 +136,18 @@ impl Action for DocPage {
 
 #[derive(Debug, Clone)]
 pub struct Seo(pub &'static str, pub &'static str);
+
+#[derive(Debug)]
+pub struct TestPage;
+
+#[async_trait]
+impl Action for TestPage {
+    async fn handle(
+        &self,
+        app: &App,
+        request: HttpRequest,
+    ) -> Result<Box<dyn Responsable>, HttpError> {
+        dbg!(request.var("slug"));
+        todo!()
+    }
+}

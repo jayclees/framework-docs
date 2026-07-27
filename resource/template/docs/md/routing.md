@@ -41,7 +41,7 @@ In your [`Action`](/docs/actions)'s `handle` method:
 
 ```rust
 // Request: /user/123
-let user_id = request.var();
+let user_id = request.var("user").unwrap();
 
 // user_id = "123"
 dbg!(user_id);

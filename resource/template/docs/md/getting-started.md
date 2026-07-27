@@ -5,8 +5,9 @@
 To download the project template, `cd` into your preferred projects directory and run the following command:
 
 ```shell
-git clone https://placeholder my-project
+git clone https://github.com/jayclees/sturdy-project my-project
 cd my-project
+cp .env.example .env
 ```
 
 &nbsp;
@@ -31,8 +32,8 @@ docker compose up -d --build
 
 This will boot up three services:
 
-- The `app` service, which will run your app server and `.rs` file watchers for automatic compilation.
-- The `nginx` service, which will proxy requests to your `app` service. This is because Sturdy does not handle serving static assets such as `yourdomain.com/robots.txt` (which will be in `my-project/public` directory).
+- The `app` service, which will run your app server watch your `.rs` files, and the `resource/template` directory for auto compile/auto reload.
+- The `nginx` service, which will proxy requests to your `app` service. This is because Sturdy does not handle serving static assets such as `example.com/robots.txt` (which will be in `my-project/public` directory).
 - The `node` service, which will run `vite` to handle front-end asset bundling, and reloading the client browser when any change is made to front-end or back-end files.
 
 Next you will need to find the IP address of the Nginx container. This is usually one of:

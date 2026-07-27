@@ -1,4 +1,4 @@
-use crate::action::pages::{DocIndexPage, Seo};
+use crate::action::pages::{DocIndexPage, Seo, TestPage};
 use crate::state::AppState;
 use sturdy::routing::router::Router;
 
@@ -16,6 +16,7 @@ pub fn register_routes(state: &AppState, router: &mut Router) {
         },
         "docs.index",
     );
+    router.get("/test/{slug}", TestPage);
     for (key, doc_page) in state.doc_pages.clone().iter() {
         let route_name = doc_page.route_name;
         router.getn(

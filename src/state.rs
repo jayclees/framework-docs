@@ -82,15 +82,15 @@ impl AppState {
                         "A New Framework Designed For The Modern Web.",
                     ),
                 ),
-                StandardPage::new(
-                    "/about",
-                    "about",
-                    "about.html",
-                    Seo(
-                        "About - Sturdy Framework",
-                        "A New Framework Designed For The Modern Web.",
-                    ),
-                ),
+                // StandardPage::new(
+                //     "/about",
+                //     "about",
+                //     "about.html",
+                //     Seo(
+                //         "About - Sturdy Framework",
+                //         "A New Framework Designed For The Modern Web.",
+                //     ),
+                // ),
                 StandardPage::new(
                     "/license",
                     "license",

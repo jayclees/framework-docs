@@ -1762,16 +1762,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "minijinja-autoreload"
-version = "2.21.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ae3beccb89ba701d64c9e496c9fec7a57a203945bb7bf76b2373ad1407364975"
-dependencies = [
- "minijinja",
- "notify",
-]
-
-[[package]]
 name = "mio"
 version = "1.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2686,18 +2676,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "serde_qs"
-version = "1.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67d525c8ff68aa99e5818302259bdd02d86d0303710616f39c0f44846ff6d332"
-dependencies = [
- "itoa",
- "percent-encoding",
- "ryu",
- "serde",
-]
-
-[[package]]
 name = "sha1"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3020,7 +2998,7 @@ checksum = "9628de9b8791db39ceda2b119bbe13134770b56c138ec1d3af810d045c04f9bd"
 
 [[package]]
 name = "sturdy"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "async-trait",
  "chrono",
@@ -3031,12 +3009,10 @@ dependencies = [
  "hyper-util",
  "log",
  "minijinja",
- "minijinja-autoreload",
  "regex",
  "sea-orm",
  "serde",
  "serde_json",
- "serde_qs",
  "tokio",
 ]
 
