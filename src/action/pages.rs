@@ -136,18 +136,3 @@ impl Action for DocPage {
 
 #[derive(Debug, Clone)]
 pub struct Seo(pub &'static str, pub &'static str);
-
-#[derive(Debug)]
-pub struct TestPage;
-
-#[async_trait]
-impl Action for TestPage {
-    async fn handle(
-        &self,
-        app: &App,
-        request: HttpRequest,
-    ) -> Result<Box<dyn Responsable>, HttpError> {
-        dbg!(request.var("slug"));
-        todo!()
-    }
-}
