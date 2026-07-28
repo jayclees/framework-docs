@@ -15,7 +15,7 @@ async fn handle(
     request: HttpRequest,
 ) -> Result<Box<dyn Responsable>, HttpError> {
     // project-root/resource/template/user.html
-    let result = app.template("user.html", context! { name: "John Doe" });
+    let result = app.template("user.html", Some(context! { name: "John Doe" }));
 
     match result {
         Ok(rendered) => Ok(Box::new(rendered)),

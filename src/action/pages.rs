@@ -42,10 +42,10 @@ impl Action for StandardPage {
     ) -> Result<Box<dyn Responsable>, HttpError> {
         let result = app.template(
             &self.template,
-            context! {
+            Some(context! {
                 title => self.seo.0,
                 description => self.seo.1,
-            },
+            }),
         );
 
         match result {
@@ -70,11 +70,11 @@ impl Action for DocIndexPage {
         let mut doc_pages = &app.state::<AppState>().doc_pages_vec();
         let result = app.template(
             "docs/index.html",
-            context! {
+            Some(context! {
                 doc_pages,
                 title => self.seo.0,
                 description => self.seo.1,
-            },
+            }),
         );
 
         match result {
@@ -118,10 +118,10 @@ impl Action for DocPage {
                 .unwrap();
                 let result = app.template(
                     "docs/show.html",
-                    context!(
+                    Some(context!(
                         doc_pages,
                         content => html,
-                    ),
+                    )),
                 );
 
                 match result {
